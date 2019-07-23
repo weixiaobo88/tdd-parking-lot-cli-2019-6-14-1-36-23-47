@@ -45,6 +45,25 @@ public class ParkingBoy {
     }
 
     public Car fetch(ParkingTicket ticket) {
+        if (null != parkingLots && parkingLots.length > 0) {
+            return fetchInMultipleParkingLots(parkingLots, ticket);
+        }
+
+        return this.fetchInSingleParkingLot(parkingLot, ticket);
+    }
+
+    private Car fetchInMultipleParkingLots(ParkingLot[] parkingLots, ParkingTicket ticket) {
+        for (int i = 0; i < parkingLots.length; i++) {
+            Car car = this.fetchInSingleParkingLot(parkingLots[i], ticket);
+            if (null != car) {
+                return car;
+            }
+        }
+
+        return null;
+    }
+
+    public Car fetchInSingleParkingLot(ParkingLot parkingLot, ParkingTicket ticket) {
         if (null == ticket) {
             this.lastErrorMessage = "Please provide your parking ticket.";
             return null;
@@ -62,5 +81,9 @@ public class ParkingBoy {
 
     public ParkingLot[] getParkingLots() {
         return parkingLots;
+    }
+
+    public ParkingTicket park(ParkingBoy parkingBoy, Car car) {
+        return this.park(car);
     }
 }
